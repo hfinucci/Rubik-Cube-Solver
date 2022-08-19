@@ -1,0 +1,12 @@
+BLUE = 0
+RED = 1
+GREEN = 2
+YELLOW = 3
+WHITE = 4
+ORANGE = 5
+
+LEFT = 0
+RIGHT = 1
+
+DOWN = 0
+UP = 1
