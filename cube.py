@@ -55,9 +55,9 @@ class Cube:
 
 
 cube = Cube(3)
-cube.RotateXAxis(0,RIGHT)
+# cube.RotateXAxis(0,RIGHT)
 cube.RotateYAxis(1, DOWN)
-cube.RotateZAxis(1, CLOCKWISE)
+# cube.RotateZAxis(1, CLOCKWISE)
 
 print(cube.cube)
 
