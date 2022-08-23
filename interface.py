@@ -62,7 +62,7 @@ def _draw_cube(x, y, cell_width, cell_height, colors):
                      width=RECT_WIDTH)
 
 
-def draw_cube(my_cube):
+def draw_cube(my_cube: Cube):
     _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y, CELL_WIDTH, CELL_HEIGHT, my_cube.cube[3].flatten())
     _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, my_cube.cube[4].flatten())
     _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y + CUBE_HEIGHT * 2, CELL_WIDTH, CELL_HEIGHT, my_cube.cube[1].flatten())
