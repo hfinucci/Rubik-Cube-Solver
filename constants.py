@@ -5,14 +5,17 @@ YELLOW = 3
 WHITE = 4
 ORANGE = 5
 
+# rotate direction
+
+
 # Rotate X axis
 LEFT = 0
 RIGHT = 1
 
 # Rotate Y axis
-DOWN = 0
-UP = 1
+#DOWN = 0
+#UP = 1
 
 # Rotate Z axis
-ANTI_CLOCKWISE = 0
-CLOCKWISE = 1
+#ANTI_CLOCKWISE = 0
+#CLOCKWISE = 1
