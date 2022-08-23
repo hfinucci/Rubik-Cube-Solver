@@ -11,6 +11,9 @@ class Cube:
         for i in range(0, 6):
             self.cube[i] = i
 
+        self.init_hash = hash(str(self.cube))
+        self.current_hash = self.init_hash
+
     # Rotates faces 0->1->2->3->0 if RIGHT
     def rotate_x_axis(self, row, direction):
         opposite = self.n - 1 - row
@@ -37,6 +40,9 @@ class Cube:
             else:
                 self.cube[ORANGE] = np.rot90(self.cube[ORANGE], axes=(0, 1))
 
+        self.current_hash = hash(str(self.cube))
+        return self.current_hash
+
     # Rotates 0->4->2->5->0 if UP
     def rotate_y_axis(self, row, direction):
         if direction == RIGHT:
@@ -61,6 +67,9 @@ class Cube:
                 self.cube[RED] = np.rot90(self.cube[RED], axes=(0, 1))
             else:
                 self.cube[RED] = np.rot90(self.cube[RED], axes=(1, 0))
+
+        self.current_hash = hash(str(self.cube))
+        return self.current_hash
 
     def rotate_z_axis(self, row, direction):
         if direction == RIGHT:
@@ -87,8 +96,14 @@ class Cube:
             else:
                 self.cube[GREEN] = np.rot90(self.cube[GREEN], axes=(1, 0))
 
-    def isDone(self):
-        pass
+        self.current_hash = hash(str(self.cube))
+        return self.current_hash
+
+    def is_done(self):
+        return self.init_hash == self.current_hash
+
+    def get_current_state(self):
+        return self.current_hash
 
     def mix_up(self, num):
         for x in range(num):
@@ -101,3 +116,24 @@ class Cube:
                     self.rotate_y_axis(row, direction)
                 case 2:
                     self.rotate_z_axis(row, direction)
+
+        self.current_hash = hash(str(self.cube))
+        return self.current_hash
+
+
+cube = Cube(3)
+print("el primer estado")
+print(cube.get_current_state())
+cube.rotate_x_axis(0, RIGHT)
+cube.rotate_y_axis(0, RIGHT)
+cube.rotate_z_axis(0, RIGHT)
+print(cube.get_current_state())
+cube.rotate_z_axis(0, LEFT)
+cube.rotate_y_axis(0, LEFT)
+cube.rotate_x_axis(0, LEFT)
+print(cube.get_current_state())
+
+if cube.is_done():
+    print("ok")
+else:
+    print("mal")
