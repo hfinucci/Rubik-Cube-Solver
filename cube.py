@@ -3,6 +3,13 @@ import numpy as np
 from constants import *
 
 
+def my_hash(text: str):
+    aux_hash = 0
+    for ch in text:
+        aux_hash = (aux_hash * 281 ^ ord(ch) * 997) & 0xFFFFFFFF
+    return aux_hash
+
+
 class Cube:
     def __init__(self, n):
         self.cube = np.zeros((6, n, n), dtype=int)  # numpy.int8
@@ -11,7 +18,7 @@ class Cube:
         for i in range(0, 6):
             self.cube[i] = i
 
-        self.init_hash = hash(str(self.cube))
+        self.init_hash = my_hash(str(self.cube))
         self.current_hash = self.init_hash
 
     # Rotates faces 0->1->2->3->0 if RIGHT
@@ -40,7 +47,7 @@ class Cube:
             else:
                 self.cube[ORANGE] = np.rot90(self.cube[ORANGE], axes=(0, 1))
 
-        self.current_hash = hash(str(self.cube))
+        self.current_hash = my_hash(str(self.cube))
         return self.current_hash
 
     # Rotates 0->4->2->5->0 if UP
@@ -68,7 +75,7 @@ class Cube:
             else:
                 self.cube[RED] = np.rot90(self.cube[RED], axes=(1, 0))
 
-        self.current_hash = hash(str(self.cube))
+        self.current_hash = my_hash(str(self.cube))
         return self.current_hash
 
     def rotate_z_axis(self, row, direction):
@@ -96,7 +103,7 @@ class Cube:
             else:
                 self.cube[GREEN] = np.rot90(self.cube[GREEN], axes=(1, 0))
 
-        self.current_hash = hash(str(self.cube))
+        self.current_hash = my_hash(str(self.cube))
         return self.current_hash
 
     def is_done(self):
@@ -117,11 +124,12 @@ class Cube:
                 case 2:
                     self.rotate_z_axis(row, direction)
 
-        self.current_hash = hash(str(self.cube))
+        self.current_hash = my_hash(str(self.cube))
         return self.current_hash
 
 
 cube = Cube(3)
+print(str(cube.cube))
 print("el primer estado")
 print(cube.get_current_state())
 cube.rotate_x_axis(0, RIGHT)
