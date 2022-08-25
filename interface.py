@@ -79,10 +79,9 @@ while 1:
             sys.exit()
 
     screen.fill(BACKGROUND_COLOR)
-
+    cube = cube.mix_up(1)
     draw_cube(cube)
-    cube.mix_up(1)
-    pygame.time.wait(1000)
+    pygame.time.wait(200)
     pygame.display.flip()
 
     """"

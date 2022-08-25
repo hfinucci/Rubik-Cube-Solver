@@ -1,3 +1,4 @@
+import copy
 import random
 import numpy as np
 from constants import *
@@ -23,88 +24,91 @@ class Cube:
 
     # Rotates faces 0->1->2->3->0 if RIGHT
     def rotate_x_axis(self, row, direction):
-        opposite = self.n - 1 - row
+        cube_copy = copy.deepcopy(self)
+        opposite = cube_copy.n - 1 - row
         if direction == LEFT:
-            aux = np.array(self.cube[YELLOW][opposite, :])
-            self.cube[YELLOW][opposite, :] = self.cube[GREEN][:, row]
-            self.cube[GREEN][:, row] = self.cube[RED][row, :]
-            self.cube[RED][row, :] = self.cube[BLUE][:, opposite]
-            self.cube[BLUE][:, opposite] = aux
+            aux = np.array(cube_copy.cube[YELLOW][opposite, :])
+            cube_copy.cube[YELLOW][opposite, :] = cube_copy.cube[GREEN][:, row]
+            cube_copy.cube[GREEN][:, row] = cube_copy.cube[RED][row, :]
+            cube_copy.cube[RED][row, :] = cube_copy.cube[BLUE][:, opposite]
+            cube_copy.cube[BLUE][:, opposite] = aux
         elif direction == RIGHT:
-            aux = np.array(self.cube[BLUE][:, opposite])
-            self.cube[BLUE][:, opposite] = self.cube[RED][row, :]
-            self.cube[RED][row, :] = self.cube[GREEN][:, row]
-            self.cube[GREEN][:, row] = self.cube[YELLOW][opposite, :]
-            self.cube[YELLOW][opposite, :] = aux
+            aux = np.array(cube_copy.cube[BLUE][:, opposite])
+            cube_copy.cube[BLUE][:, opposite] = cube_copy.cube[RED][row, :]
+            cube_copy.cube[RED][row, :] = cube_copy.cube[GREEN][:, row]
+            cube_copy.cube[GREEN][:, row] = cube_copy.cube[YELLOW][opposite, :]
+            cube_copy.cube[YELLOW][opposite, :] = aux
         if row == 0:
             if direction == RIGHT:
-                self.cube[WHITE] = np.rot90(self.cube[WHITE], axes=(1, 0))
+                cube_copy.cube[WHITE] = np.rot90(cube_copy.cube[WHITE], axes=(1, 0))
             else:
-                self.cube[WHITE] = np.rot90(self.cube[WHITE], axes=(0, 1))
-        if row == self.n - 1:
+                cube_copy.cube[WHITE] = np.rot90(cube_copy.cube[WHITE], axes=(0, 1))
+        if row == cube_copy.n - 1:
             if direction == RIGHT:
-                self.cube[ORANGE] = np.rot90(self.cube[ORANGE], axes=(1, 0))
+                cube_copy.cube[ORANGE] = np.rot90(cube_copy.cube[ORANGE], axes=(1, 0))
             else:
-                self.cube[ORANGE] = np.rot90(self.cube[ORANGE], axes=(0, 1))
+                cube_copy.cube[ORANGE] = np.rot90(cube_copy.cube[ORANGE], axes=(0, 1))
 
-        self.current_hash = my_hash(str(self.cube))
-        return self.current_hash
+        cube_copy.current_hash = my_hash(str(cube_copy.cube))
+        return cube_copy
 
     # Rotates 0->4->2->5->0 if UP
     def rotate_y_axis(self, row, direction):
+        cube_copy = copy.deepcopy(self)
         if direction == RIGHT:
-            aux = np.array(self.cube[5][row, :])
-            self.cube[5][row, :] = self.cube[2][row, :]
-            self.cube[2][row, :] = self.cube[4][row, :]
-            self.cube[4][row, :] = self.cube[0][row, :]
-            self.cube[0][row, :] = aux
+            aux = np.array(cube_copy.cube[5][row, :])
+            cube_copy.cube[5][row, :] = cube_copy.cube[2][row, :]
+            cube_copy.cube[2][row, :] = cube_copy.cube[4][row, :]
+            cube_copy.cube[4][row, :] = cube_copy.cube[0][row, :]
+            cube_copy.cube[0][row, :] = aux
         elif direction == LEFT:
-            aux = np.array(self.cube[0][row, :])
-            self.cube[0][row, :] = self.cube[4][row, :]
-            self.cube[4][row, :] = self.cube[2][row, :]
-            self.cube[2][row, :] = self.cube[5][row, :]
-            self.cube[5][row, :] = aux
+            aux = np.array(cube_copy.cube[0][row, :])
+            cube_copy.cube[0][row, :] = cube_copy.cube[4][row, :]
+            cube_copy.cube[4][row, :] = cube_copy.cube[2][row, :]
+            cube_copy.cube[2][row, :] = cube_copy.cube[5][row, :]
+            cube_copy.cube[5][row, :] = aux
         if row == 0:
             if direction == LEFT:
-                self.cube[YELLOW] = np.rot90(self.cube[YELLOW], axes=(1, 0))
+                cube_copy.cube[YELLOW] = np.rot90(cube_copy.cube[YELLOW], axes=(1, 0))
             else:
-                self.cube[YELLOW] = np.rot90(self.cube[YELLOW], axes=(0, 1))
-        if row == self.n - 1:
+                cube_copy.cube[YELLOW] = np.rot90(cube_copy.cube[YELLOW], axes=(0, 1))
+        if row == cube_copy.n - 1:
             if direction == LEFT:
-                self.cube[RED] = np.rot90(self.cube[RED], axes=(0, 1))
+                cube_copy.cube[RED] = np.rot90(cube_copy.cube[RED], axes=(0, 1))
             else:
-                self.cube[RED] = np.rot90(self.cube[RED], axes=(1, 0))
+                cube_copy.cube[RED] = np.rot90(cube_copy.cube[RED], axes=(1, 0))
 
-        self.current_hash = my_hash(str(self.cube))
-        return self.current_hash
+        cube_copy.current_hash = my_hash(str(cube_copy.cube))
+        return cube_copy
 
     def rotate_z_axis(self, row, direction):
+        cube_copy = copy.deepcopy(self)
         if direction == RIGHT:
-            aux = np.array(self.cube[1][:, row])
-            self.cube[1][:, row] = self.cube[4][:, row]
-            self.cube[4][:, row] = self.cube[3][:, row]
-            self.cube[3][:, row] = self.cube[5][:, row]
-            self.cube[5][:, row] = aux
+            aux = np.array(cube_copy.cube[1][:, row])
+            cube_copy.cube[1][:, row] = cube_copy.cube[4][:, row]
+            cube_copy.cube[4][:, row] = cube_copy.cube[3][:, row]
+            cube_copy.cube[3][:, row] = cube_copy.cube[5][:, row]
+            cube_copy.cube[5][:, row] = aux
 
         elif direction == LEFT:
-            aux = np.array(self.cube[5][:, row])
-            self.cube[5][:, row] = self.cube[3][:, row]
-            self.cube[3][:, row] = self.cube[4][:, row]
-            self.cube[4][:, row] = self.cube[1][:, row]
-            self.cube[1][:, row] = aux
+            aux = np.array(cube_copy.cube[5][:, row])
+            cube_copy.cube[5][:, row] = cube_copy.cube[3][:, row]
+            cube_copy.cube[3][:, row] = cube_copy.cube[4][:, row]
+            cube_copy.cube[4][:, row] = cube_copy.cube[1][:, row]
+            cube_copy.cube[1][:, row] = aux
         if row == 0:
             if direction == RIGHT:
-                self.cube[BLUE] = np.rot90(self.cube[BLUE], axes=(1, 0))
+                cube_copy.cube[BLUE] = np.rot90(cube_copy.cube[BLUE], axes=(1, 0))
             else:
-                self.cube[BLUE] = np.rot90(self.cube[BLUE], axes=(0, 1))
-        if row == self.n - 1:
+                cube_copy.cube[BLUE] = np.rot90(cube_copy.cube[BLUE], axes=(0, 1))
+        if row == cube_copy.n - 1:
             if direction == RIGHT:
-                self.cube[GREEN] = np.rot90(self.cube[GREEN], axes=(0, 1))
+                cube_copy.cube[GREEN] = np.rot90(cube_copy.cube[GREEN], axes=(0, 1))
             else:
-                self.cube[GREEN] = np.rot90(self.cube[GREEN], axes=(1, 0))
+                cube_copy.cube[GREEN] = np.rot90(cube_copy.cube[GREEN], axes=(1, 0))
 
-        self.current_hash = my_hash(str(self.cube))
-        return self.current_hash
+        cube_copy.current_hash = my_hash(str(cube_copy.cube))
+        return cube_copy
 
     def is_done(self):
         return self.init_hash == self.current_hash
@@ -118,14 +122,14 @@ class Cube:
             direction = random.randint(0, 1)
             match random.randint(0, 2):
                 case 0:
-                    self.rotate_x_axis(row, direction)
+                    self = self.rotate_x_axis(row, direction)
                 case 1:
-                    self.rotate_y_axis(row, direction)
+                    self = self.rotate_y_axis(row, direction)
                 case 2:
-                    self.rotate_z_axis(row, direction)
+                    self = self.rotate_z_axis(row, direction)
 
         self.current_hash = my_hash(str(self.cube))
-        return self.current_hash
+        return self
 
 
 cube = Cube(3)
