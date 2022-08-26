@@ -1,6 +1,7 @@
 import copy
 import random
 import numpy as np
+from algorithms import dfs
 from constants import *
 
 
@@ -49,7 +50,7 @@ class Cube:
             else:
                 cube_copy.cube[ORANGE] = np.rot90(cube_copy.cube[ORANGE], axes=(0, 1))
 
-        cube_copy.current_hash = my_hash(str(cube_copy.cube))
+        cube_copy.current_hash = hash(str(cube_copy.cube))
         return cube_copy
 
     # Rotates 0->4->2->5->0 if UP
@@ -78,7 +79,7 @@ class Cube:
             else:
                 cube_copy.cube[RED] = np.rot90(cube_copy.cube[RED], axes=(1, 0))
 
-        cube_copy.current_hash = my_hash(str(cube_copy.cube))
+        cube_copy.current_hash = hash(str(cube_copy.cube))
         return cube_copy
 
     def rotate_z_axis(self, row, direction):
@@ -128,24 +129,13 @@ class Cube:
                 case 2:
                     self = self.rotate_z_axis(row, direction)
 
-        self.current_hash = my_hash(str(self.cube))
+        self.current_hash = hash(str(self.cube))
         return self
 
 
-cube = Cube(3)
-print(str(cube.cube))
-print("el primer estado")
-print(cube.get_current_state())
-cube.rotate_x_axis(0, RIGHT)
-cube.rotate_y_axis(0, RIGHT)
-cube.rotate_z_axis(0, RIGHT)
-print(cube.get_current_state())
-cube.rotate_z_axis(0, LEFT)
-cube.rotate_y_axis(0, LEFT)
-cube.rotate_x_axis(0, LEFT)
-print(cube.get_current_state())
+cube = Cube(2)
+cube = cube.mix_up(5)
 
-if cube.is_done():
-    print("ok")
-else:
-    print("mal")
+print(cube.cube)
+
+dfs(cube)
