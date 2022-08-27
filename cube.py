@@ -1,5 +1,6 @@
 import random
-import time
+from hashlib import sha1
+
 import numpy as np
 
 # Rotate X axis
@@ -142,7 +143,8 @@ def rotate_z_axis(cube, row, direction):
 
 
 def get_hash(cube: np):
-    return hash(str(cube))
+    return hash(cube.tostring())
+
 
 
 def is_done(state):
@@ -164,9 +166,30 @@ def mix_up(cube, num):
 
     return cube_copy
 
-"""""
+
+x = "13333333333333"
+
+
+class Node:
+    def __init__(self, cube, level, cost, rotate):
+        self.cube = cube
+        self.level = level
+        self.rotate = rotate
+        self.cost = cost
+
 
 aux = np.zeros((FACES_NUM, 3, 3), dtype=np.int8)  # numpy.int8
+node = Node(aux, 0, 1, (-1, -1, -1))
+
+axis = 0
+row = 22
+dire = 1
+if axis == node.rotate[0] and row == node.rotate[1] and dire == (node.rotate[2] + 1) % 2:
+    print('sip')
+
+"""""
+
+
 
 for i in range(0, 6):
     aux[i] = i
@@ -176,5 +199,7 @@ end = time.perf_counter()
 
 print(end - start)
 
+
+sha1(arr)
 
 """""

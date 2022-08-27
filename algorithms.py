@@ -1,3 +1,4 @@
+import time
 from collections import deque
 import numpy as np
 import cube as cb
@@ -10,7 +11,6 @@ class Node:
         self.level = level
         self.rotate = rotate
         self.cost = cost
-
 
 
 class Dfs:
@@ -52,57 +52,99 @@ class Bfs:
             return False
         return True
 
-# borrar
-deeper_level = 0
-#
+
+def algorithms(num):
+    # PRUEBA
+    # Creó el cubo
+    f_cube = cb.init_cube(2)
+
+    # mezclo el cubo
+    f_cube = cb.mix_up(f_cube, num)
+
+    # creo el nodo raiz
+    f_node = Node(f_cube, 0, 0, (-1, -1, -1))
+
+    # creo el arbol
+    algorithm = Dfs(f_node)
+    # algorithm = Bfs(f_node)
+
+    # borrar --->
+    deeper_level = 0
+    x = list()
+    size = 0
+    # <---
+
+    while not algorithm.isEmpty():
+        # busco el siguiente nodo
+        node: Node = algorithm.get_next()
+
+        # actualizo los valorer
+        new_level = node.level + 1
+
+        # tester borrar --->
+        """
+        if new_level > deeper_level:
+            deeper_level = new_level
+            print("depper_level:" + str(deeper_level))
+            
+            if deeper_level == 6:
+                end = time.perf_counter()
+                return end - start
+            """
+        # <----
+
+        # creeo todos los hijos
+        current_cube = node.cube
+
+        # borrar --->
+        start = time.perf_counter()
+        # <---
+        for axis in range(0, 3):
+            for row in range(0, cb.n_row):
+                for dire in range(0, 2):
+                    # roto el cubo
+                    if axis == node.rotate[0] and row == node.rotate[1] and dire == (node.rotate[2] + 1) % 2:
+                        continue  # es el movimento que hace que vuelva al estado anterior
+
+                    aux_cube = cb.rotate(current_cube, axis, row, dire)
+                    # checkeo si es solucion
+                    node_hash = cb.get_hash(aux_cube)
+
+                    if node_hash == cb.init_hash:
+                        print("solucion")
+                        end = time.perf_counter()
+                        print(end - start)
+                        exit()
+
+                    # sino, creo el nodo y lo guardo
+                    new_node = Node(aux_cube, new_level, 0, (axis, row, dire))
+                    algorithm.add(new_node, node_hash)
+
+"""
+        end = time.perf_counter()
+        x.append(end - start)
+        size += 1
+        if size == 100000:
+            print(sum(x) / len(x))
+            x = list()
+            size = 0
+"""
+
+algorithms(20)
+
+"""
+x = list()
+
+for i in range(0, 10):
+    x.append(algorithms())
+
+print("termino")
+print(x)
+print(sum(x) / len(x))
 
 
-# PRUEBA
-# Creo el cubo
-f_cube = cb.init_cube(2)
-
-# mezclo el cubo
-f_cube = cb.mix_up(f_cube, 50)
-
-# creo el nodo raiz
-f_node = Node(f_cube, 0, 0, "")
 
 
-# creo el arbol
-algorithm = Dfs(f_node)
-# algorithm = Bfs(f_node)
-
-while not algorithm.isEmpty():
-    # busco el siguiente nodo
-    current = algorithm.get_next()
-
-    # actualizo los valorer
-    new_level = current.level + 1
-
-    # tester borrar
-    if new_level > deeper_level:
-        deeper_level = new_level
-        print("depper_level:" + str(deeper_level))
-
-    # creeo todos los hijos
-    current_cube = current.cube
-    for axis in range(0, 3):
-        for row in range(0, cb.n_row):
-            for direction in range(0, 2):
-                # roto el cubo
-                aux_cube = cb.rotate(current_cube, axis, row, direction)
-
-                # checkeo si es solucion
-                node_hash = cb.get_hash(aux_cube)
-                if node_hash == cb.init_hash:
-                    print("solucion")
-                    exit()
-
-                # sino, creo el nodo y lo guardo
-                new_node = Node(aux_cube, new_level, 0, (axis, row, direction))
-                algorithm.add(new_node, node_hash)
-
-"""""
 def dfs(cube):
     visited = dict()
     stack = deque()
