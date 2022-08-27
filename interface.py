@@ -1,6 +1,6 @@
 import pygame
 import sys
-from cube import Cube
+import cube
 from constants import *
 
 pygame.init()
@@ -62,48 +62,38 @@ def _draw_cube(x, y, cell_width, cell_height, colors):
                      width=RECT_WIDTH)
 
 
-def draw_cube(my_cube: Cube):
-    _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y, CELL_WIDTH, CELL_HEIGHT, my_cube.cube[3].flatten())
-    _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, my_cube.cube[4].flatten())
-    _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y + CUBE_HEIGHT * 2, CELL_WIDTH, CELL_HEIGHT, my_cube.cube[1].flatten())
-    _draw_cube(INITIAL_X, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, my_cube.cube[0].flatten())
-    _draw_cube(INITIAL_X + CUBE_WIDTH * 2, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, my_cube.cube[2].flatten())
-    _draw_cube(INITIAL_X + CUBE_WIDTH * 3, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, my_cube.cube[5].flatten())
+def draw_cube(my_cube):
+    _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y, CELL_WIDTH, CELL_HEIGHT, my_cube[3].flatten())
+    _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, my_cube[4].flatten())
+    _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y + CUBE_HEIGHT * 2, CELL_WIDTH, CELL_HEIGHT, my_cube[1].flatten())
+    _draw_cube(INITIAL_X, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, my_cube[0].flatten())
+    _draw_cube(INITIAL_X + CUBE_WIDTH * 2, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, my_cube[2].flatten())
+    _draw_cube(INITIAL_X + CUBE_WIDTH * 3, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, my_cube[5].flatten())
 
 
 screen = pygame.display.set_mode(size)
-cube = Cube(3)
+
+# crear cubo
+current_cube = cube.init_cube(3)
+
+# las variables del cubo
+print(cube.n_col)
+print(cube.init_hash)
+
+# hash del cubo
+current_hash = cube.get_current_state(current_cube)
+print(cube.is_done(current_hash))
+
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
 
     screen.fill(BACKGROUND_COLOR)
-    cube = cube.mix_up(1)
-    draw_cube(cube)
+
+    current_cube = cube.mix_up(current_cube, 1)
+    draw_cube(current_cube)
+
     pygame.time.wait(200)
     pygame.display.flip()
-
-    """"
-    _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y, CELL_WIDTH, CELL_HEIGHT, cube.cube[2].flatten())
-    _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, cube.cube[5].flatten())
-    _draw_cube(INITIAL_X + CUBE_WIDTH, INITIAL_Y + CUBE_HEIGHT * 2, CELL_WIDTH, CELL_HEIGHT, cube.cube[0].flatten())
-    _draw_cube(INITIAL_X, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, cube.cube[3].flatten())
-    _draw_cube(INITIAL_X + CUBE_WIDTH * 2, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, cube.cube[1].flatten())
-    _draw_cube(INITIAL_X + CUBE_WIDTH * 3, INITIAL_Y + CUBE_HEIGHT, CELL_WIDTH, CELL_HEIGHT, cube.cube[4].flatten())
-    
-    pygame.time.wait(100)
-    cube.RotateXAxis(0, RIGHT)
-    pygame.time.wait(100)
-    cube.RotateYAxis(2, UP)
-    pygame.time.wait(100)
-    cube.RotateXAxis(2, LEFT)
-    pygame.time.wait(100)
-    cube.RotateYAxis(1, DOWN)
-    pygame.time.wait(100)
-    cube.RotateZAxis(3, CLOCKWISE)
-    pygame.time.wait(100)
-    cube.RotateYAxis(0, DOWN)
-    """
-
 
