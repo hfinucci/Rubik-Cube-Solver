@@ -1,7 +1,7 @@
 import pygame
 import sys
 import cube
-from constants import *
+
 
 pygame.init()
 
@@ -22,17 +22,17 @@ BACKGROUND_COLOR = (225, 225, 225)
 
 def calculate_color(number):
     match number:
-        case 0:  # BLUE
+        case cube.BLUE:  # BLUE
             return 0, 0, 255
-        case 1:  # RED
+        case cube.RED:  # RED
             return 255, 0, 0
-        case 2:  # GREEN
+        case cube.GREEN:  # GREEN
             return 60, 179, 113
-        case 3:  # YELLOW
+        case cube.YELLOW:  # YELLOW
             return 255, 255, 100
-        case 4:  # WHITE
+        case cube.WHITE:  # WHITE
             return 255, 255, 255
-        case 5:  # ORANGE
+        case cube.ORANGE:  # ORANGE
             return 255, 165, 0
         case _:  # DEFAULT RETURNS BLACK
             return 0, 0, 0
@@ -75,14 +75,7 @@ screen = pygame.display.set_mode(size)
 
 # crear cubo
 current_cube = cube.init_cube(3)
-
-# las variables del cubo
-print(cube.n_col)
-print(cube.init_hash)
-
-# hash del cubo
-current_hash = cube.get_current_state(current_cube)
-print(cube.is_done(current_hash))
+current_cube = cube.rotate_x_axis(current_cube, 0, cube.LEFT)
 
 while 1:
     for event in pygame.event.get():
@@ -91,9 +84,10 @@ while 1:
 
     screen.fill(BACKGROUND_COLOR)
 
-    current_cube = cube.mix_up(current_cube, 1)
+    pygame.time.wait(1000)
+    current_cube = cube.rotate_z_axis(current_cube, 2, cube.RIGHT)
+    #current_cube = cube.mix_up(current_cube, 1)
     draw_cube(current_cube)
-
-    pygame.time.wait(200)
     pygame.display.flip()
+
 
