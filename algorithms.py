@@ -2,7 +2,6 @@ import time
 from collections import deque
 import numpy as np
 import cube as cb
-from constants import *
 
 
 class Node:
@@ -120,7 +119,8 @@ def algorithms(num):
                     new_node = Node(aux_cube, new_level, 0, (axis, row, dire))
                     algorithm.add(new_node, node_hash)
 
-"""
+
+"""     # calcula en promedio cuánto tarda en procesar un node
         end = time.perf_counter()
         x.append(end - start)
         size += 1
