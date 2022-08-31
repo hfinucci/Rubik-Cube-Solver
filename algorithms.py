@@ -1,15 +1,15 @@
 import time
 from collections import deque
+from queue import PriorityQueue
 import numpy as np
 import cube as cb
 
 
 class Node:
-    def __init__(self, cube, level, cost, rotate):
+    def __init__(self, cube, level, rotate):
         self.cube = cube
         self.level = level
         self.rotate = rotate
-        self.cost = cost
 
 
 class Dfs:
@@ -18,10 +18,10 @@ class Dfs:
         self.visited = set()
         self.stack.append(first_node)
 
-    def add(self, node: Node, node_hash):
+    def add(self, aux_cube, new_level, settings, node_hash):
         if node_hash not in self.visited:
             self.visited.add(node_hash)
-            self.stack.append(node)
+            self.stack.append(Node(aux_cube, new_level, settings))
 
     def get_next(self):
         return self.stack.pop()
@@ -38,10 +38,10 @@ class Bfs:
         self.visited = set()
         self.stack.append(first_node)
 
-    def add(self, node: Node, node_hash):
+    def add(self, aux_cube, level, settings, node_hash):
         if node_hash not in self.visited:
             self.visited.add(node_hash)
-            self.stack.append(node)
+            self.stack.append(Node(aux_cube, level, settings))
 
     def get_next(self):
         return self.stack.popleft()
@@ -52,20 +52,69 @@ class Bfs:
         return True
 
 
+class AStar:
+    def __init__(self, fist_node, heuristic):
+        self.list = PriorityQueue()
+        self.visited = set()
+        self.list.append(fist_node)
+        self.heuristic = heuristic
+
+    def add(self, aux_cube, level, settings, node_hash):
+        if node_hash not in self.visited:
+            self.visited.add(node_hash)
+            node = Node(aux_cube, level, settings)
+            h_value = self.heuristic(node)
+            self.list.put((node.level + h_value, node))
+
+    def get_next(self):
+        return self.list.get()
+
+    def isEmpty(self):
+        return self.list.empty()
+            
+
+# Igual que AStar pero la prioridad del priority queue solo se ve afectada por la herisitca
+class Greedy:
+    def __init__(self, fist_node, heuristic):
+        self.list = PriorityQueue()
+        self.visited = set()
+        self.list.append(fist_node)
+        self.heuristic = heuristic
+
+    def add(self, aux_cube, level, settings, node_hash):
+        if node_hash not in self.visited:
+            self.visited.add(node_hash)
+            node = Node(aux_cube, level, settings)
+            h_value = self.heuristic(node)
+            self.list.put((h_value, node))
+
+    def get_next(self):
+        return self.list.get()
+
+    def isEmpty(self):
+        return self.list.empty()
+
+
+def rookie(num):
+    print('rookie!')
+    print(num)
+
 def algorithms(num):
     # PRUEBA
     # Creó el cubo
-    f_cube = cb.init_cube(2)
+    f_cube = cb.init_cube(3)
 
     # mezclo el cubo
     f_cube = cb.mix_up(f_cube, num)
 
     # creo el nodo raiz
-    f_node = Node(f_cube, 0, 0, (-1, -1, -1))
+    f_node = Node(f_cube, 0, (-1, -1, -1))
 
+    print(f_node.cube)
+    print("---------")
     # creo el arbol
-    algorithm = Dfs(f_node)
-    # algorithm = Bfs(f_node)
+    # algorithm = Dfs(f_node)
+    algorithm = Bfs(f_node)
 
     # borrar --->
     deeper_level = 0
@@ -96,7 +145,7 @@ def algorithms(num):
         current_cube = node.cube
 
         # borrar --->
-        start = time.perf_counter()
+        # start = time.perf_counter()
         # <---
         for axis in range(0, 3):
             for row in range(0, cb.n_row):
@@ -111,13 +160,13 @@ def algorithms(num):
 
                     if node_hash == cb.init_hash:
                         print("solucion")
-                        end = time.perf_counter()
-                        print(end - start)
+                        # end = time.perf_counter()
+                        # print(end - start)
+                        print(aux_cube)
                         exit()
 
-                    # sino, creo el nodo y lo guardo
-                    new_node = Node(aux_cube, new_level, 0, (axis, row, dire))
-                    algorithm.add(new_node, node_hash)
+                    # sino, llamo a add para que guarde el nodo
+                    algorithm.add(aux_cube, new_level,(axis, row, dire), node_hash)
 
 
 """     # calcula en promedio cuánto tarda en procesar un node
@@ -130,7 +179,7 @@ def algorithms(num):
             size = 0
 """
 
-algorithms(20)
+algorithms(6)
 
 """
 x = list()
