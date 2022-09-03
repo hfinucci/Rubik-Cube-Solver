@@ -1,10 +1,12 @@
 import time
 from collections import deque
 from queue import PriorityQueue
+from dataclasses import dataclass, field
 import numpy as np
 import cube as cb
+import heuristics as heu
 
-
+@dataclass(order=True)
 class Node:
     def __init__(self, cube, level, rotate):
         self.cube = cube
@@ -56,7 +58,7 @@ class AStar:
     def __init__(self, fist_node, heuristic):
         self.list = PriorityQueue()
         self.visited = set()
-        self.list.append(fist_node)
+        self.list.put((0,fist_node))
         self.heuristic = heuristic
 
     def add(self, aux_cube, level, settings, node_hash):
@@ -64,10 +66,10 @@ class AStar:
             self.visited.add(node_hash)
             node = Node(aux_cube, level, settings)
             h_value = self.heuristic(node)
-            self.list.put((node.level + h_value, node))
+            self.list.put(((level + h_value), node))
 
     def get_next(self):
-        return self.list.get()
+        return self.list.get()[1]
 
     def isEmpty(self):
         return self.list.empty()
@@ -78,7 +80,7 @@ class Greedy:
     def __init__(self, fist_node, heuristic):
         self.list = PriorityQueue()
         self.visited = set()
-        self.list.append(fist_node)
+        self.list.put((0,fist_node))
         self.heuristic = heuristic
 
     def add(self, aux_cube, level, settings, node_hash):
@@ -89,15 +91,12 @@ class Greedy:
             self.list.put((h_value, node))
 
     def get_next(self):
-        return self.list.get()
+        return self.list.get()[1]
 
     def isEmpty(self):
         return self.list.empty()
 
 
-def rookie(num):
-    print('rookie!')
-    print(num)
 
 def algorithms(num):
     # PRUEBA
@@ -110,11 +109,11 @@ def algorithms(num):
     # creo el nodo raiz
     f_node = Node(f_cube, 0, (-1, -1, -1))
 
-    print(f_node.cube)
-    print("---------")
     # creo el arbol
     # algorithm = Dfs(f_node)
-    algorithm = Bfs(f_node)
+    # algorithm = Bfs(f_node)
+    algorithm = AStar(f_node, heu.colors)
+    # algorithm = Greedy(f_node, heu.colors)
 
     # borrar --->
     deeper_level = 0
@@ -124,8 +123,9 @@ def algorithms(num):
 
     while not algorithm.isEmpty():
         # busco el siguiente nodo
+        
         node: Node = algorithm.get_next()
-
+        
         # actualizo los valorer
         new_level = node.level + 1
 
@@ -179,7 +179,7 @@ def algorithms(num):
             size = 0
 """
 
-algorithms(6)
+algorithms(1)
 
 """
 x = list()
