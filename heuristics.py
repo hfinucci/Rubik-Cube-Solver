@@ -21,21 +21,25 @@ def cubes(node):
         middle_num = node.cube[i][(cb.n_row - 1) // 2][(cb.n_row - 1) // 2] // 100
         for row in range(0, cb.n_row):
             for col in range(0, cb.n_row):
-                # print(node.cube)
-                # print(node.cube[i][row][col])
                 aux = node.cube[i][row][col]
                 _col = aux % 10
                 aux //= 10
                 _row = aux % 10
                 color = aux // 10
-                # print("color :" + str(color))
-                # print("row :" + str(row) + " _row :" + str(_row) )
-                # print("col :" + str(col) + " _col :" + str(_col))
-                # print("-------------------")
                 if color == middle_num and _col == col and _row == row:
                     total += 1
     return 27 - total
 
+def manhattan(node):
+    for i in range(0, 6):
+        middle_num = node.cube[i][(cb.n_row - 1) // 2][(cb.n_row - 1) // 2] // 100
+        for row in range(0, cb.n_row):
+            for col in range(0, cb.n_row):
+                aux = node.cube[i][row][col]
+                _col = aux % 10
+                aux //= 10
+                _row = aux % 10
+                color = aux // 10
+                distance = abs(_row - row) + abs(_col - col) + calculate_distance()
+    return distance
 
-def deeper(node):
-    return 0
