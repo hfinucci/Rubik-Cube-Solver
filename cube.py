@@ -37,9 +37,11 @@ init_hash = 0
 def init_cube(n):
     global n_row, init_hash
     n_row = n
-    new_cube = np.zeros((FACES_NUM, n_row, n_row), dtype=np.int8)  # numpy.int8
+    new_cube = np.zeros((FACES_NUM, n_row, n_row), dtype=np.int16)  # numpy.int8
     for i in range(0, 6):
-        new_cube[i] = i
+        for row in range(0, n):
+            for col in range(0, n):
+                new_cube[i][row][col] = i*100 + row *10 + col
 
     init_hash = get_hash(new_cube)
     return np.copy(new_cube)

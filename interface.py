@@ -85,8 +85,8 @@ while 1:
     screen.fill(BACKGROUND_COLOR)
 
     pygame.time.wait(1000)
-    current_cube = cube.rotate_z_axis(current_cube, 2, cube.RIGHT)
-    #current_cube = cube.mix_up(current_cube, 1)
+    # current_cube = cube.rotate_z_axis(current_cube, 2, cube.RIGHT)
+    current_cube = cube.mix_up(current_cube, 1)
     draw_cube(current_cube)
     pygame.display.flip()
 

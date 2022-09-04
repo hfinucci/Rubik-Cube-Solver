@@ -58,7 +58,7 @@ class AStar:
     def __init__(self, fist_node, heuristic):
         self.list = PriorityQueue()
         self.visited = set()
-        self.list.put((0,fist_node))
+        self.list.put((0, fist_node))
         self.heuristic = heuristic
 
     def add(self, aux_cube, level, settings, node_hash):
@@ -110,10 +110,10 @@ def algorithms(num):
     f_node = Node(f_cube, 0, (-1, -1, -1))
 
     # creo el arbol
-    # algorithm = Dfs(f_node)
+    #algorithm = Dfs(f_node)
     # algorithm = Bfs(f_node)
-    algorithm = AStar(f_node, heu.colors)
-    # algorithm = Greedy(f_node, heu.colors)
+    #algorithm = AStar(f_node, heu.deeper)
+    algorithm = Greedy(f_node, heu.cubes)
 
     # borrar --->
     deeper_level = 0
@@ -128,17 +128,15 @@ def algorithms(num):
         
         # actualizo los valorer
         new_level = node.level + 1
+        print(node.level)
 
         # tester borrar --->
-        """
-        if new_level > deeper_level:
-            deeper_level = new_level
-            print("depper_level:" + str(deeper_level))
-            
-            if deeper_level == 6:
-                end = time.perf_counter()
-                return end - start
-            """
+        # if new_level > deeper_level:
+        #     deeper_level = new_level
+        #     print("depper_level:" + str(deeper_level))
+        #     if deeper_level == 6:
+        #         end = time.perf_counter()
+        #         return end - start
         # <----
 
         # creeo todos los hijos
@@ -179,7 +177,7 @@ def algorithms(num):
             size = 0
 """
 
-algorithms(1)
+algorithms(10)
 
 """
 x = list()
