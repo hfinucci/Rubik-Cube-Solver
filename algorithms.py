@@ -62,7 +62,7 @@ class AStar:
         self.heuristic = heuristic
 
     def add(self, aux_cube, level, settings, node_hash):
-        if node_hash not in self.visited:
+        if node_hash not in self.visited and level < 20:
             self.visited.add(node_hash)
             node = Node(aux_cube, level, settings)
             h_value = self.heuristic(node)
@@ -84,7 +84,7 @@ class Greedy:
         self.heuristic = heuristic
 
     def add(self, aux_cube, level, settings, node_hash):
-        if node_hash not in self.visited:
+        if node_hash not in self.visited and level < 20:
             self.visited.add(node_hash)
             node = Node(aux_cube, level, settings)
             h_value = self.heuristic(node)
@@ -112,8 +112,8 @@ def algorithms(num):
     # creo el arbol
     #algorithm = Dfs(f_node)
     # algorithm = Bfs(f_node)
-    #algorithm = AStar(f_node, heu.deeper)
-    algorithm = Greedy(f_node, heu.cubes)
+    algorithm = AStar(f_node, heu.cubes)
+    # algorithm = Greedy(f_node, heu.cubes)
 
     # borrar --->
     deeper_level = 0
