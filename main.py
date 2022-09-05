@@ -3,6 +3,7 @@ import heuristics as heu
 import algorithms as al
 import time
 
+
 def algorithms(num):
     # Creó el cubo
     f_cube = cb.init_cube(3)
@@ -17,41 +18,48 @@ def algorithms(num):
     # algorithm = al.Dfs(f_node)
     # algorithm = al.Bfs(f_node)
     algorithm = al.AStar(f_node, heu.manhattanDistance)
-    #algorithm = al.Greedy(f_node, heu.manhattanDistance)
+    # algorithm = al.Greedy(f_node, heu.colors)
 
-
+    explored = 0
     while not algorithm.isEmpty():
+        start_node = time.perf_counter()
+
         # busco el siguiente nodo
         node: al.Node = algorithm.get_next()
 
         # actualizo los valorer
         new_level = node.level + 1
-        print(new_level)
 
         # creeo todos los hijos
         state = node.cube
         for axis in range(0, 3):
             for row in range(0, cb.n_row):
                 for dire in range(0, 2):
-                    # roto el cubo
+                    # descartó las rotaciones que no son necesarias
+                    if row == cb.n_row // 2:
+                        continue
                     if axis == node.rotate[0] and row == node.rotate[1] and dire == (node.rotate[2] + 1) % 2:
                         continue  # es el movimento que hace que vuelva al estado anterior
 
+                    # roto el cubo
                     new_state = cb.rotate(state, axis, row, dire)
-                    # checkeo si es solucion
+
+                    # obtengo el hash del nuevo estado
                     node_hash = cb.get_hash(new_state)
 
+                    # checkeo si es solucion
                     if node_hash == cb.init_hash:
                         print("solucion")
-                        print(new_state)
-                        exit()
+                        return
 
                     # sino, llamo a add para que guarde el nodo
-                    algorithm.add(new_state, new_level, (axis, row, dire), node_hash)
-
+                    if algorithm.add(new_state, new_level, (axis, row, dire), node_hash):
+                        explored += 1
+        if (explored % 1000) == 0:
+            print(explored)
 
 
 start = time.perf_counter()
-algorithms(5)
+algorithms(10)
 end = time.perf_counter()
 print(end - start)

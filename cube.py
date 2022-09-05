@@ -30,25 +30,15 @@ WHITE = X_FACE
 ORANGE = Y_FACE
 
 n_row = 0
-init_hash = set()
+init_hash = 0
 
+faces = ((Z_FACE, 0, 0), (Z_FACE, 0, 1), (Z_FACE, 0, 2), (Z_FACE, 1, 0),
+         (Z_FACE, 1, 2), (Z_FACE, 2, 0), (Z_FACE, 2, 1), (Z_FACE, 2, 2),
 
-def get_init_hashsets(cube):
-    global n_row, init_hash
+         (Z_OPP_FACE, 0, 0), (Z_OPP_FACE, 0, 1), (Z_OPP_FACE, 0, 2), (Z_OPP_FACE, 1, 0),
+         (Z_OPP_FACE, 1, 2), (Z_OPP_FACE, 2, 0), (Z_OPP_FACE, 2, 1), (Z_OPP_FACE, 2, 2),
 
-    for j in range(0, 4):
-        for i in range(0, n_row):
-            rotate_x_axis(cube, i, RIGHT)
-        init_hash.add(get_hash(cube))
-
-    for z in range(0, 2):
-        for i in range(0, n_row):
-            rotate_z_axis(cube, i, RIGHT)
-
-    for j in range(0, 4):
-        for i in range(0, n_row):
-            rotate_x_axis(cube, i, RIGHT)
-        init_hash.add(get_hash(cube))
+         (Y_FACE, 1, 0), (Y_FACE, 1, 2), (Y_OPP_FACE, 1, 0), (Y_OPP_FACE, 1, 2))
 
 
 def init_cube(n):
@@ -60,15 +50,15 @@ def init_cube(n):
             for col in range(0, n):
                 new_cube[i][row][col] = i * 100 + row * 10 + col
 
-    get_init_hashsets(new_cube)
-    # get_hash(new_cube)
-    print(new_cube)
-    print(init_hash)
+    init_hash = get_hash(new_cube)
 
     return np.copy(new_cube)
 
 
+# devulve una copia con el estado, no permite rota el centro de la cara
 def rotate(cube, axis, row, direction):
+    if row == n_row // 2:
+        return cube
     cube_copy = np.copy(cube)
     if axis == X_AXIS:
         return rotate_x_axis(cube_copy, row, direction)
@@ -169,8 +159,7 @@ def get_hash(cube: np):
 
 def is_done(state):
     global init_hash
-    return state not in init_hash
-    # return state == init_hash
+    return state == init_hash
 
 
 def mix_up(cube, num):
@@ -178,12 +167,6 @@ def mix_up(cube, num):
     for x in range(num):
         row = random.randint(0, n_row - 1)
         direction = random.randint(0, 1)
-        match random.randint(0, 2):
-            case 0:
-                cube_copy = rotate_x_axis(cube_copy, row, direction)
-            case 1:
-                cube_copy = rotate_y_axis(cube_copy, row, direction)
-            case 2:
-                cube_copy = rotate_z_axis(cube_copy, row, direction)
-
+        axis = random.randint(0, 2)
+        cube_copy = rotate(cube_copy, axis, row, direction)
     return cube_copy

@@ -6,9 +6,9 @@ import algorithms as al
 def colors(node):
     total = 0
     for i in range(0, 6):
-        middle_num = node.cube[i][(cb.n_row - 1) // 2][(cb.n_row - 1) // 2]
-        total += np.count_nonzero(node.cube[i] == middle_num)
-    return (cb.n_row * cb.n_row) * 6 - total
+        middle_color = node.cube[i][(cb.n_row - 1) // 2][(cb.n_row - 1) // 2] // 100
+        total += np.count_nonzero(node.cube[i] == middle_color)
+    return ((cb.n_row * cb.n_row) * 6 - total) // 20
 
 
 def cubes(node):
@@ -17,7 +17,6 @@ def cubes(node):
         middle_num = node.cube[i][(cb.n_row - 1) // 2][(cb.n_row - 1) // 2] // 100
         for row in range(0, cb.n_row):
             for col in range(0, cb.n_row):
-                # TODO: pasar a una funcion
                 aux = node.cube[i][row][col]
                 _col = aux % 10
                 aux //= 10
@@ -25,25 +24,23 @@ def cubes(node):
                 color = aux // 10
                 if color == middle_num and _col == col and _row == row:
                     total += 1
-    return 27 - total
+    # return 27 - total
+    return ((cb.n_row * cb.n_row) * 6 - total) // 20
 
 
 def manhattanDistance(node):
     heuristic = 0
-    for color in range(0, 6):
-        for row in range(0, cb.n_row):
-            for col in range(0, cb.n_row):
-                target = color*100 + row*10 + col
-                celda = node.cube[color][row][col]
-                if celda != target:
-                    target = node.cube[color][row][col]
-                    heuristic += manhBfs(node, target)
-    return (54 - heuristic) / 20
+    for face in cb.faces:
+        target = face[0] * 100 + face[1] * 10 + face[2]
+        cell_value = node.cube[face[0]][face[1]][face[2]]
+        if cell_value != target:
+            heuristic += manhBfs(node, cell_value)
+    return heuristic // 8
 
 
+# cuantos rotacion se necesita para que la celda target quede en el lugar correcto
 def manhBfs(node, target):
     algorithm = al.Bfs(node)
-
     aux = target
     _col = aux % 10
     aux //= 10
@@ -55,21 +52,27 @@ def manhBfs(node, target):
         node = algorithm.get_next()
 
         new_level = node.level + 1
+        if new_level == 6:
+            return new_level + 10
 
         state = node.cube
-
         for axis in range(0, 3):
             for row in range(0, cb.n_row):
                 for dire in range(0, 2):
-                    # roto el cubo
+                    # descartó las rotaciones que no son necesarias
+                    if row == cb.n_row // 2:
+                        continue
                     if axis == node.rotate[0] and row == node.rotate[1] and dire == (node.rotate[2] + 1) % 2:
                         continue  # es el movimento que hace que vuelva al estado anterior
 
+                    # roto el cubo
                     new_state = cb.rotate(state, axis, row, dire)
+
+                    # checkeo si es solucion
                     if new_state[_color][_row][_col] == target:
                         return new_level
 
-                    # checkeo si es solucion
+                    # obtengo el hash del nuevo estado
                     node_hash = cb.get_hash(new_state)
 
                     # sino, llamo a add para que guarde el nodo

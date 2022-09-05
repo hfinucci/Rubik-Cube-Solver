@@ -21,6 +21,8 @@ class Dfs:
         if node_hash not in self.visited:
             self.visited.add(node_hash)
             self.stack.append(Node(aux_cube, new_level, settings))
+            return True
+        return False
 
     def get_next(self):
         return self.stack.pop()
@@ -41,6 +43,8 @@ class Bfs:
         if node_hash not in self.visited:
             self.visited.add(node_hash)
             self.stack.append(Node(aux_cube, level, settings))
+            return True
+        return False
 
     def get_next(self):
         return self.stack.popleft()
@@ -64,6 +68,8 @@ class AStar:
             node = Node(aux_cube, level, settings)
             h_value = self.heuristic(node)
             self.list.put(((level + h_value), node))
+            return True
+        return False
 
     def get_next(self):
         return self.list.get()[1]
@@ -86,6 +92,8 @@ class Greedy:
             node = Node(aux_cube, level, settings)
             h_value = self.heuristic(node)
             self.list.put((h_value, node))
+            return True
+        return False
 
     def get_next(self):
         return self.list.get()[1]
