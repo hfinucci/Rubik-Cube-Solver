@@ -1,14 +1,10 @@
 import cube as cb
 import numpy as np
-
-a = 0
-b = 0
-c = 0
+import algorithms as al
 
 
 def colors(node):
     total = 0
-    global a, b, c
     for i in range(0, 6):
         middle_num = node.cube[i][(cb.n_row - 1) // 2][(cb.n_row - 1) // 2]
         total += np.count_nonzero(node.cube[i] == middle_num)
@@ -21,21 +17,60 @@ def cubes(node):
         middle_num = node.cube[i][(cb.n_row - 1) // 2][(cb.n_row - 1) // 2] // 100
         for row in range(0, cb.n_row):
             for col in range(0, cb.n_row):
-                # print(node.cube)
-                # print(node.cube[i][row][col])
+                # TODO: pasar a una funcion
                 aux = node.cube[i][row][col]
                 _col = aux % 10
                 aux //= 10
                 _row = aux % 10
                 color = aux // 10
-                # print("color :" + str(color))
-                # print("row :" + str(row) + " _row :" + str(_row) )
-                # print("col :" + str(col) + " _col :" + str(_col))
-                # print("-------------------")
                 if color == middle_num and _col == col and _row == row:
                     total += 1
     return 27 - total
 
 
-def deeper(node):
-    return 0
+def manhattanDistance(node):
+    heuristic = 0
+    for color in range(0, 6):
+        for row in range(0, cb.n_row):
+            for col in range(0, cb.n_row):
+                target = color*100 + row*10 + col
+                celda = node.cube[color][row][col]
+                if celda != target:
+                    target = node.cube[color][row][col]
+                    heuristic += manhBfs(node, target)
+    return (54 - heuristic) / 20
+
+
+def manhBfs(node, target):
+    algorithm = al.Bfs(node)
+
+    aux = target
+    _col = aux % 10
+    aux //= 10
+    _row = aux % 10
+    _color = aux // 10
+
+    while not algorithm.isEmpty():
+        # busco el siguiente nodo
+        node = algorithm.get_next()
+
+        new_level = node.level + 1
+
+        state = node.cube
+
+        for axis in range(0, 3):
+            for row in range(0, cb.n_row):
+                for dire in range(0, 2):
+                    # roto el cubo
+                    if axis == node.rotate[0] and row == node.rotate[1] and dire == (node.rotate[2] + 1) % 2:
+                        continue  # es el movimento que hace que vuelva al estado anterior
+
+                    new_state = cb.rotate(state, axis, row, dire)
+                    if new_state[_color][_row][_col] == target:
+                        return new_level
+
+                    # checkeo si es solucion
+                    node_hash = cb.get_hash(new_state)
+
+                    # sino, llamo a add para que guarde el nodo
+                    algorithm.add(new_state, new_level, (axis, row, dire), node_hash)

@@ -1,6 +1,5 @@
 import random
-from hashlib import sha1
-
+import time
 import numpy as np
 
 # Rotate X axis
@@ -31,126 +30,147 @@ WHITE = X_FACE
 ORANGE = Y_FACE
 
 n_row = 0
-init_hash = 0
+init_hash = set()
+
+def get_init_hashsets(cube):
+    global n_row, init_hash
+
+    for j in range(0, 4):
+        for i in range(0, n_row):
+            rotate_x_axis(cube, i, RIGHT)
+        init_hash.add(get_hash(cube))
+
+    for z in range(0, 2):
+        rotate_z_axis(cube, z, RIGHT)
+
+    for j in range(0, 4):
+        for i in range(0, n_row):
+            rotate_x_axis(cube, i, RIGHT)
+        init_hash.add(get_hash(cube))
+
+
 
 
 def init_cube(n):
     global n_row, init_hash
     n_row = n
-    new_cube = np.zeros((FACES_NUM, n_row, n_row), dtype=np.int16)  # numpy.int8
+    new_cube = np.zeros((FACES_NUM, n, n), dtype=np.int16)  # numpy.int8
     for i in range(0, 6):
         for row in range(0, n):
             for col in range(0, n):
-                new_cube[i][row][col] = i*100 + row *10 + col
+                new_cube[i][row][col] = i * 100 + row * 10 + col
 
-    init_hash = get_hash(new_cube)
+    get_init_hashsets(new_cube)
+    # get_hash(new_cube)
+    print(new_cube)
+    print(init_hash)
+
     return np.copy(new_cube)
 
 
 def rotate(cube, axis, row, direction):
+    cube_copy = np.copy(cube)
     if axis == X_AXIS:
-        return rotate_x_axis(cube, row, direction)
+        return rotate_x_axis(cube_copy, row, direction)
     elif axis == Y_AXIS:
-        return rotate_y_axis(cube, row, direction)
+        return rotate_y_axis(cube_copy, row, direction)
     elif axis == Z_AXIS:
-        return rotate_z_axis(cube, row, direction)
+        return rotate_z_axis(cube_copy, row, direction)
 
 
 # Rotates faces 0->1->2->3->0 if RIGHT
 def rotate_x_axis(cube, row, direction):
-    cube_copy = np.copy(cube)
     opp_n = n_row - 1 - row
     if direction == LEFT:
-        aux = np.array(cube_copy[Y_OPP_FACE][opp_n, :])
-        cube_copy[Y_OPP_FACE][opp_n, :] = cube_copy[Z_OPP_FACE][:, row]
-        cube_copy[Z_OPP_FACE][:, row] = cube_copy[Y_FACE][row, :]
-        cube_copy[Y_FACE][row, :] = cube_copy[Z_FACE][:, opp_n]
-        cube_copy[Z_FACE][:, opp_n] = aux
+        aux = np.array(cube[Y_OPP_FACE][opp_n, :])
+        cube[Y_OPP_FACE][opp_n, :] = cube[Z_OPP_FACE][:, row]
+        cube[Z_OPP_FACE][:, row] = cube[Y_FACE][row, :]
+        cube[Y_FACE][row, :] = cube[Z_FACE][:, opp_n]
+        cube[Z_FACE][:, opp_n] = aux
     elif direction == RIGHT:
-        aux = np.array(cube_copy[Z_FACE][:, opp_n])
-        cube_copy[Z_FACE][:, opp_n] = cube_copy[Y_FACE][row, :]
-        cube_copy[Y_FACE][row, :] = cube_copy[Z_OPP_FACE][:, row]
-        cube_copy[Z_OPP_FACE][:, row] = cube_copy[Y_OPP_FACE][opp_n, :]
-        cube_copy[Y_OPP_FACE][opp_n, :] = aux
+        aux = np.array(cube[Z_FACE][:, opp_n])
+        cube[Z_FACE][:, opp_n] = cube[Y_FACE][row, :]
+        cube[Y_FACE][row, :] = cube[Z_OPP_FACE][:, row]
+        cube[Z_OPP_FACE][:, row] = cube[Y_OPP_FACE][opp_n, :]
+        cube[Y_OPP_FACE][opp_n, :] = aux
     if row == 0:
         if direction == RIGHT:
-            cube_copy[X_FACE] = np.rot90(cube_copy[X_FACE], axes=(1, 0))
+            cube[X_FACE] = np.rot90(cube[X_FACE], axes=(1, 0))
         else:
-            cube_copy[X_FACE] = np.rot90(cube_copy[X_FACE], axes=(0, 1))
+            cube[X_FACE] = np.rot90(cube[X_FACE], axes=(0, 1))
     if row == n_row - 1:
         if direction == RIGHT:
-            cube_copy[X_OPP_FACE] = np.rot90(cube_copy[X_OPP_FACE], axes=(1, 0))
+            cube[X_OPP_FACE] = np.rot90(cube[X_OPP_FACE], axes=(1, 0))
         else:
-            cube_copy[X_OPP_FACE] = np.rot90(cube_copy[X_OPP_FACE], axes=(0, 1))
+            cube[X_OPP_FACE] = np.rot90(cube[X_OPP_FACE], axes=(0, 1))
 
-    return cube_copy
+    return cube
 
 
 # Rotates 0->4->2->5->0 if UP
 def rotate_y_axis(cube, row, direction):
-    cube_copy = np.copy(cube)
     if direction == RIGHT:
-        aux = np.array(cube_copy[X_OPP_FACE][row, :])
-        cube_copy[X_OPP_FACE][row, :] = cube_copy[Z_OPP_FACE][row, :]
-        cube_copy[Z_OPP_FACE][row, :] = cube_copy[X_FACE][row, :]
-        cube_copy[X_FACE][row, :] = cube_copy[Z_FACE][row, :]
-        cube_copy[Z_FACE][row, :] = aux
+        aux = np.array(cube[X_OPP_FACE][row, :])
+        cube[X_OPP_FACE][row, :] = cube[Z_OPP_FACE][row, :]
+        cube[Z_OPP_FACE][row, :] = cube[X_FACE][row, :]
+        cube[X_FACE][row, :] = cube[Z_FACE][row, :]
+        cube[Z_FACE][row, :] = aux
     elif direction == LEFT:
-        aux = np.array(cube_copy[Z_FACE][row, :])
-        cube_copy[Z_FACE][row, :] = cube_copy[X_FACE][row, :]
-        cube_copy[X_FACE][row, :] = cube_copy[Z_OPP_FACE][row, :]
-        cube_copy[Z_OPP_FACE][row, :] = cube_copy[X_OPP_FACE][row, :]
-        cube_copy[X_OPP_FACE][row, :] = aux
+        aux = np.array(cube[Z_FACE][row, :])
+        cube[Z_FACE][row, :] = cube[X_FACE][row, :]
+        cube[X_FACE][row, :] = cube[Z_OPP_FACE][row, :]
+        cube[Z_OPP_FACE][row, :] = cube[X_OPP_FACE][row, :]
+        cube[X_OPP_FACE][row, :] = aux
     if row == 0:
         if direction == LEFT:
-            cube_copy[Y_OPP_FACE] = np.rot90(cube_copy[Y_OPP_FACE], axes=(1, 0))
+            cube[Y_OPP_FACE] = np.rot90(cube[Y_OPP_FACE], axes=(1, 0))
         else:
-            cube_copy[Y_OPP_FACE] = np.rot90(cube_copy[Y_OPP_FACE], axes=(0, 1))
+            cube[Y_OPP_FACE] = np.rot90(cube[Y_OPP_FACE], axes=(0, 1))
     if row == n_row - 1:
         if direction == LEFT:
-            cube_copy[Y_FACE] = np.rot90(cube_copy[Y_FACE], axes=(0, 1))
+            cube[Y_FACE] = np.rot90(cube[Y_FACE], axes=(0, 1))
         else:
-            cube_copy[Y_FACE] = np.rot90(cube_copy[Y_FACE], axes=(1, 0))
+            cube[Y_FACE] = np.rot90(cube[Y_FACE], axes=(1, 0))
 
-    return cube_copy
+    return cube
 
 
 def rotate_z_axis(cube, row, direction):
-    cube_copy = np.copy(cube)
     if direction == RIGHT:
-        aux = np.array(cube_copy[Y_FACE][:, row])
-        cube_copy[Y_FACE][:, row] = cube_copy[X_FACE][:, row]
-        cube_copy[X_FACE][:, row] = cube_copy[Y_OPP_FACE][:, row]
-        cube_copy[Y_OPP_FACE][:, row] = cube_copy[X_OPP_FACE][:, row]
-        cube_copy[X_OPP_FACE][:, row] = aux
+        aux = np.array(cube[Y_FACE][:, row])
+        cube[Y_FACE][:, row] = cube[X_FACE][:, row]
+        cube[X_FACE][:, row] = cube[Y_OPP_FACE][:, row]
+        cube[Y_OPP_FACE][:, row] = cube[X_OPP_FACE][:, row]
+        cube[X_OPP_FACE][:, row] = aux
 
     elif direction == LEFT:
-        aux = np.array(cube_copy[X_OPP_FACE][:, row])
-        cube_copy[X_OPP_FACE][:, row] = cube_copy[Y_OPP_FACE][:, row]
-        cube_copy[Y_OPP_FACE][:, row] = cube_copy[X_FACE][:, row]
-        cube_copy[X_FACE][:, row] = cube_copy[Y_FACE][:, row]
-        cube_copy[Y_FACE][:, row] = aux
+        aux = np.array(cube[X_OPP_FACE][:, row])
+        cube[X_OPP_FACE][:, row] = cube[Y_OPP_FACE][:, row]
+        cube[Y_OPP_FACE][:, row] = cube[X_FACE][:, row]
+        cube[X_FACE][:, row] = cube[Y_FACE][:, row]
+        cube[Y_FACE][:, row] = aux
     if row == 0:
         if direction == RIGHT:
-            cube_copy[Z_FACE] = np.rot90(cube_copy[Z_FACE], axes=(1, 0))
+            cube[Z_FACE] = np.rot90(cube[Z_FACE], axes=(1, 0))
         else:
-            cube_copy[Z_FACE] = np.rot90(cube_copy[Z_FACE], axes=(0, 1))
+            cube[Z_FACE] = np.rot90(cube[Z_FACE], axes=(0, 1))
     if row == n_row - 1:
         if direction == RIGHT:
-            cube_copy[Z_OPP_FACE] = np.rot90(cube_copy[Z_OPP_FACE], axes=(0, 1))
+            cube[Z_OPP_FACE] = np.rot90(cube[Z_OPP_FACE], axes=(0, 1))
         else:
-            cube_copy[Z_OPP_FACE] = np.rot90(cube_copy[Z_OPP_FACE], axes=(1, 0))
+            cube[Z_OPP_FACE] = np.rot90(cube[Z_OPP_FACE], axes=(1, 0))
 
-    return cube_copy
+    return cube
 
 
 def get_hash(cube: np):
     return hash(cube.tostring())
 
 
-
 def is_done(state):
-    return state == init_hash
+    global init_hash
+    return state not in init_hash
+    # return state == init_hash
 
 
 def mix_up(cube, num):
@@ -169,39 +189,3 @@ def mix_up(cube, num):
     return cube_copy
 
 
-x = "13333333333333"
-
-
-class Node:
-    def __init__(self, cube, level, cost, rotate):
-        self.cube = cube
-        self.level = level
-        self.rotate = rotate
-        self.cost = cost
-
-
-aux = np.zeros((FACES_NUM, 3, 3), dtype=np.int8)  # numpy.int8
-node = Node(aux, 0, 1, (-1, -1, -1))
-
-axis = 0
-row = 22
-dire = 1
-if axis == node.rotate[0] and row == node.rotate[1] and dire == (node.rotate[2] + 1) % 2:
-    print('sip')
-
-"""""
-
-
-
-for i in range(0, 6):
-    aux[i] = i
-start = time.perf_counter()
-hash(str(str(aux[Z_FACE]) + str(aux[Y_FACE]) + str(aux[X_FACE])))
-end = time.perf_counter()
-
-print(end - start)
-
-
-sha1(arr)
-
-"""""
