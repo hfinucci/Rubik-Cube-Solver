@@ -32,6 +32,7 @@ ORANGE = Y_FACE
 n_row = 0
 init_hash = set()
 
+
 def get_init_hashsets(cube):
     global n_row, init_hash
 
@@ -41,14 +42,13 @@ def get_init_hashsets(cube):
         init_hash.add(get_hash(cube))
 
     for z in range(0, 2):
-        rotate_z_axis(cube, z, RIGHT)
+        for i in range(0, n_row):
+            rotate_z_axis(cube, i, RIGHT)
 
     for j in range(0, 4):
         for i in range(0, n_row):
             rotate_x_axis(cube, i, RIGHT)
         init_hash.add(get_hash(cube))
-
-
 
 
 def init_cube(n):
@@ -187,5 +187,3 @@ def mix_up(cube, num):
                 cube_copy = rotate_z_axis(cube_copy, row, direction)
 
     return cube_copy
-
-
