@@ -17,6 +17,7 @@ def cubes(node):
         middle_num = node.cube[i][(cb.n_row - 1) // 2][(cb.n_row - 1) // 2] // 100
         for row in range(0, cb.n_row):
             for col in range(0, cb.n_row):
+                # TODO: pasar a una funcion
                 aux = node.cube[i][row][col]
                 _col = aux % 10
                 aux //= 10
@@ -26,18 +27,6 @@ def cubes(node):
                     total += 1
     return 27 - total
 
-def manhattan(node):
-    for i in range(0, 6):
-        middle_num = node.cube[i][(cb.n_row - 1) // 2][(cb.n_row - 1) // 2] // 100
-        for row in range(0, cb.n_row):
-            for col in range(0, cb.n_row):
-                aux = node.cube[i][row][col]
-                _col = aux % 10
-                aux //= 10
-                _row = aux % 10
-                color = aux // 10
-                distance = abs(_row - row) + abs(_col - col) + calculate_distance()
-    return distance
 
 def manhattanDistance(node):
     heuristic = 0
