@@ -30,7 +30,6 @@ Para instalar las librerías:
 
 ```
 pip install numpy
-pip install matplotlib
 ```
 
 ## Ejecución
