@@ -65,7 +65,7 @@ def algorithms(num):
 
 
 start = time.perf_counter()
-algorithms(20)
+algorithms(9)
 end = time.perf_counter()
 print(end - start)
 
