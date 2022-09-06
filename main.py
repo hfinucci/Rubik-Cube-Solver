@@ -18,12 +18,12 @@ def algorithms(num):
     # creo el arbol
     # algorithm = al.Dfs(f_node)
     algorithm = al.Bfs(f_node)
-    # algorithm = al.AStar(f_node, heu.manhattanDistance)
     # algorithm = al.Greedy(f_node, heu.colors)
+    # algorithm = al.Greedy(f_node, heu.cubes)
+    # algorithm = al.Greedy(f_node, heu.manhattanDistance)
+    # algorithm = al.AStar(f_node, heu.colors)
+    # algorithm = al.AStar(f_node, heu.cubes)
     # algorithm = al.AStar(f_node, heu.manhattanDistance)
-    # algorithm = al.Greedy(f_node, heu.colors)
-    # algorithm = al.AStar(f_node, heu.manhattanDistance)
-    # algorithm = al.Greedy(f_node, heu.colors)
 
     explored = 0
     while not algorithm.isEmpty():
