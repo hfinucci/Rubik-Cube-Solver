@@ -2,6 +2,7 @@ import cube as cb
 import heuristics as heu
 import algorithms as al
 import time
+import random
 
 
 def algorithms(num):
@@ -60,6 +61,11 @@ def algorithms(num):
 
 
 start = time.perf_counter()
-algorithms(10)
+algorithms(20)
 end = time.perf_counter()
 print(end - start)
+
+
+
+
+
