@@ -34,7 +34,7 @@ pip install numpy
 
 ## Ejecución
 
-Se debe entra al archivo main.py y dentro de la funcion algorithms(num) se debe descomentar alguna de las siguientes lineas para seleccionar 
+Se debe entrar al archivo main.py y dentro de la funcion algorithms(num) se debe descomentar alguna de las siguientes lineas para seleccionar 
 el metodo de busqueda deseado
 
 ```
