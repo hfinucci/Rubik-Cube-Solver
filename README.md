@@ -12,9 +12,8 @@ Implementacion de un motor de busqueda de soluciones de un Cubo Rubik de caras d
 
 
 Este programa permite resolver este cubo mediante estos metodos de busqueda no informados:
-- BPA
-- BPP 
-- BPPV
+- BFS
+- DFS 
 
 También lo puede resolver mediante estos metodos de busqueda informados:
 - Greedy
