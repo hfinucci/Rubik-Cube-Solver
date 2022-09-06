@@ -17,8 +17,12 @@ def algorithms(num):
 
     # creo el arbol
     # algorithm = al.Dfs(f_node)
-    # algorithm = al.Bfs(f_node)
-    algorithm = al.AStar(f_node, heu.manhattanDistance)
+    algorithm = al.Bfs(f_node)
+    # algorithm = al.AStar(f_node, heu.manhattanDistance)
+    # algorithm = al.Greedy(f_node, heu.colors)
+    # algorithm = al.AStar(f_node, heu.manhattanDistance)
+    # algorithm = al.Greedy(f_node, heu.colors)
+    # algorithm = al.AStar(f_node, heu.manhattanDistance)
     # algorithm = al.Greedy(f_node, heu.colors)
 
     explored = 0
@@ -50,14 +54,14 @@ def algorithms(num):
 
                     # checkeo si es solucion
                     if node_hash == cb.init_hash:
-                        print("solucion")
+                        print("explorados: "+str(explored))
+                        print("nivel: "+str(new_level))
                         return
 
                     # sino, llamo a add para que guarde el nodo
+
                     if algorithm.add(new_state, new_level, (axis, row, dire), node_hash):
                         explored += 1
-        if (explored % 1000) == 0:
-            print(explored)
 
 
 start = time.perf_counter()
