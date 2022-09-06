@@ -12,9 +12,8 @@ Implementacion de un motor de busqueda de soluciones de un Cubo Rubik de caras d
 
 
 Este programa permite resolver este cubo mediante estos metodos de busqueda no informados:
-- BPA
-- BPP 
-- BPPV
+- BFS
+- DFS
 
 También lo puede resolver mediante estos metodos de busqueda informados:
 - Greedy
@@ -28,6 +27,7 @@ Para poder correr el proyecto es necesario tener instalado:
 * NumPy
 
 Para instalar las librerías:
+
 ```
 pip install numpy
 pip install matplotlib
@@ -35,8 +35,8 @@ pip install matplotlib
 
 ## Ejecución
 
-Se debe entra al archivo main.py y dentro de la funcion algorithms(num) se debe descomentar alguna de las soguientes lines para selecionar 
-el metodo de busqueda deciado
+Se debe entra al archivo main.py y dentro de la funcion algorithms(num) se debe descomentar alguna de las siguientes lineas para seleccionar 
+el metodo de busqueda deseado
 
 ```
     #algorithm = al.Dfs(f_node)
