@@ -33,6 +33,28 @@ class Dfs:
         return True
 
 
+class Iddfs:
+    def __init__(self, first_node):
+        self.stack = deque()
+        self.visited = set()
+        self.stack.append(first_node)
+
+    def add(self, aux_cube, new_level, settings, node_hash):
+        if node_hash not in self.visited and new_level < 20:
+            self.visited.add(node_hash)
+            self.stack.append(Node(aux_cube, new_level, settings))
+            return True
+        return False
+
+    def get_next(self):
+        return self.stack.pop()
+
+    def isEmpty(self):
+        if self.stack:
+            return False
+        return True
+
+
 class Bfs:
     def __init__(self, first_node):
         self.stack = deque()

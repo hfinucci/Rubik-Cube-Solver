@@ -8,7 +8,8 @@ def colors(node):
     for i in range(0, 6):
         middle_color = node.cube[i][(cb.n_row - 1) // 2][(cb.n_row - 1) // 2] // 100
         total += np.count_nonzero(node.cube[i] == middle_color)
-    return ((cb.n_row * cb.n_row) * 6 - total) // 20
+    # return (((cb.n_row * cb.n_row) * 6 - total) * 3) // 20
+    return (-1 *total)
 
 
 def cubes(node):
@@ -25,7 +26,7 @@ def cubes(node):
                 if color == middle_num and _col == col and _row == row:
                     total += 1
     # return 27 - total
-    return ((cb.n_row * cb.n_row) * 6 - total) // 20
+    return (((cb.n_row * cb.n_row) * 6 - total) * 3) // 20
 
 
 def manhattanDistance(node):
